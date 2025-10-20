@@ -9,5 +9,5 @@ export interface AnalyzedString {
     sha256_hash: string;
     character_frequency_map: Record<string, number>;
   };
-  created_at: Date;
+  created_at: string;
 }
