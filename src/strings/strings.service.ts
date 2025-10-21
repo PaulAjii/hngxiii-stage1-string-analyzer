@@ -76,50 +76,52 @@ export class StringsService {
   filterAll(query: QueryParamsDto) {
     let filteredStrings = [...this.analyzedStrings];
 
-    const isPalindrome = query.is_palindrome
-      ? Boolean(query.is_palindrome)
-      : undefined;
-    const maxLength = query.max_length ? Number(query.max_length) : undefined;
-    const minLength = query.min_length ? Number(query.min_length) : undefined;
-    const wordCount = query.word_count ? Number(query.word_count) : undefined;
-    const containsCharacter = query.contains_character;
-
     if (query.is_palindrome !== undefined) {
       filteredStrings = filteredStrings.filter(
-        (s) => s?.properties?.is_palindrome === isPalindrome,
+        (s) => s?.properties?.is_palindrome === query.is_palindrome,
       );
     }
 
     if (query.max_length !== undefined) {
       filteredStrings = filteredStrings.filter(
-        (s) => s?.properties?.length <= maxLength!,
+        (s) => s?.properties?.length <= query.max_length,
       );
     }
 
     if (query.min_length !== undefined) {
       filteredStrings = filteredStrings.filter(
-        (s) => s?.properties?.length >= minLength!,
+        (s) => s?.properties?.length >= query.min_length,
       );
     }
 
     if (query.word_count !== undefined) {
       filteredStrings = filteredStrings.filter(
-        (s) => s?.properties?.word_count === wordCount!,
+        (s) => s?.properties?.word_count === query.word_count,
       );
     }
 
     if (query.contains_character !== undefined) {
       filteredStrings = filteredStrings.filter((s) =>
-        s?.value.toLowerCase().includes(containsCharacter.toLowerCase()),
+        s?.value.toLowerCase().includes(query.contains_character.toLowerCase()),
       );
     }
-
-    console.log(filteredStrings);
 
     return {
       data: filteredStrings,
       count: filteredStrings.length,
       filters_applied: { ...query },
     };
+  }
+
+  deleteString(value: string): void {
+    const stringIndex = this.analyzedStrings.findIndex(
+      (s) => s.value === value,
+    );
+
+    if (stringIndex === -1) {
+      throw new NotFoundException('String does not exist in the system');
+    }
+
+    this.analyzedStrings.splice(stringIndex, 1);
   }
 }
