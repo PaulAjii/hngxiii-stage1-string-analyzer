@@ -3,6 +3,7 @@ import {
   ConflictException,
   BadRequestException,
   UnprocessableEntityException,
+  NotFoundException,
 } from '@nestjs/common';
 import { ResponseDto } from './dto/response.dto';
 import { sha256Hash, isPalindrome, uniqueCharacters, wordCount } from './utils';
@@ -59,5 +60,15 @@ export class StringsService {
     this.analyzedStrings.push(analyzedString);
 
     return analyzedString;
+  }
+
+  findOneString(value: string): ResponseDto {
+    const stringData = this.analyzedStrings.find((str) => str.value === value);
+
+    if (!stringData) {
+      throw new NotFoundException('String does not exist in the system');
+    }
+
+    return stringData as ResponseDto;
   }
 }
