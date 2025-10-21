@@ -1,4 +1,13 @@
-import { Controller, Post, Body, Get, Param, Query } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Get,
+  Param,
+  Query,
+  Delete,
+  HttpCode,
+} from '@nestjs/common';
 import { StringsService } from './strings.service';
 import { ResponseDto } from './dto/response.dto';
 import { QueryParamsDto } from './dto/query-params.dto';
@@ -20,5 +29,11 @@ export class StringsController {
   @Get(':string_value')
   findOneString(@Param('string_value') string_value: string): ResponseDto {
     return this.stringsService.findOneString(string_value);
+  }
+
+  @Delete(':string_value')
+  @HttpCode(204)
+  deleteString(@Param('string_value') string_value: string): void {
+    return this.stringsService.deleteString(string_value);
   }
 }
